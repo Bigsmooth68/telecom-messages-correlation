@@ -1,0 +1,11 @@
+[
+    "time",
+    "OPC",
+    "DPC",
+    "CIC",
+    "CallingGT",
+    "CalledGT",
+    "MessageType",
+    "A-Number",
+    "B-Number"
+]
