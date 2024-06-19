@@ -1,18 +1,32 @@
 from kafka import KafkaProducer
-import os, sys, json
+import os, sys, json, time
 
 # export PYTHONPATH=.
 sys.path.insert(0, os.getcwd())
 
-from src.reader.reader import read_sample_files
+def current_milli_time():
+    return round(time.time() * 1000)
+
+from src.reader.reader import read_messages_files
 
 if __name__ == '__main__':
 
-    files = read_sample_files('/home/ols/telecom-messages-correlation/messages-sample/SS7/ISUP')
+    # Get list of messages
+    messages = read_messages_files('/home/ols/telecom-messages-correlation/messages-sample/SS7/ISUP')
 
-    producer = KafkaProducer(bootstrap_servers='localhost:9092')
+    # Get Kafka producer
+    producer = KafkaProducer(bootstrap_servers='192.168.1.30:9092')
     
-    for f in files:
-        with open(f,mode="r") as file_content:
-            producer.send(topic='simulator', value=file_content.read().encode('UTF-8'))
-            print(f)
+    # Play messages
+    previous_time = 0
+    for m in messages:
+        m_time = m['time']
+
+        sleep_time = m_time - previous_time
+        print(f'Sleeping {sleep_time}s')
+        time.sleep(sleep_time)
+        previous_time = m_time
+
+        m['time'] = current_milli_time()
+        producer.send(topic='simulator', value=json.dumps(m).encode('UTF-8'))
+        print(f'{m["time"]} - Message sent {m["MessageType"]}')
