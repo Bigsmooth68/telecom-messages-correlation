@@ -1,0 +1,9 @@
+{
+    "timestamp": 0,
+    "OPC": 111,
+    "DPC": 222,
+    "CIC": 333,
+    "MessageType": "Begin",
+    "Operation": "UpdateLocation",
+    "A-Number": 1234567890
+}
