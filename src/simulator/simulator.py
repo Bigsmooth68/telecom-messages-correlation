@@ -21,7 +21,7 @@ if __name__ == '__main__':
     messages = read_messages_files(path)
 
     # Get Kafka producer
-    producer = KafkaProducer(bootstrap_servers='192.168.1.30:9092')
+    producer = KafkaProducer(bootstrap_servers='localhost:9092')
     
     # Play messages
     previous_time = 0
