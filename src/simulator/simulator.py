@@ -1,5 +1,6 @@
 from kafka import KafkaProducer
 import os, sys, json, time
+import argparse
 
 # export PYTHONPATH=.
 sys.path.insert(0, os.getcwd())
@@ -11,8 +12,13 @@ from src.reader.reader import read_messages_files
 
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("PATH",type=str,help="Path of files to read and push to Kafka")
+    args = parser.parse_args()
+    path = args.PATH
+
     # Get list of messages
-    messages = read_messages_files('/home/ols/telecom-messages-correlation/messages-sample/SS7/ISUP')
+    messages = read_messages_files(path)
 
     # Get Kafka producer
     producer = KafkaProducer(bootstrap_servers='192.168.1.30:9092')
