@@ -23,7 +23,7 @@ def read_messages_topic(topic_name: str):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("PATH",type=str,help="Path of files to read and push to Kafka")
+    parser.add_argument("PATH",type=str,help="Path of files to read messages from.")
     args = parser.parse_args()
     path = args.PATH
 
