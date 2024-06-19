@@ -20,13 +20,13 @@ if __name__ == '__main__':
     # Play messages
     previous_time = 0
     for m in messages:
-        m_time = m['time']
+        m_time = m['timestamp']
 
         sleep_time = m_time - previous_time
-        print(f'Sleeping {sleep_time}s')
+        print(f'{current_milli_time()} - Sleeping {sleep_time}s')
         time.sleep(sleep_time)
         previous_time = m_time
 
-        m['time'] = current_milli_time()
+        m['timestamp'] = current_milli_time()
         producer.send(topic='simulator', value=json.dumps(m).encode('UTF-8'))
-        print(f'{m["time"]} - Message sent {m["MessageType"]}')
+        print(f'{current_milli_time()} - Message sent {m["MessageType"]}')

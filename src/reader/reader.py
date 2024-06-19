@@ -17,6 +17,9 @@ def read_messages_files(path: str):
 
     return messages
 
+def read_messages_topic(topic_name: str):
+    return 0
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
