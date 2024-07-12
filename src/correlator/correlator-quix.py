@@ -27,9 +27,8 @@ def main():
                     with app.get_producer() as producer:
                         producer.produce(
                             topic = "ISUP",
-                            value = isup.close_xdr('111-222-333')
+                            value = isup.close_xdr(value)
                         )
-                # breakpoint()
 
 if __name__ == "__main__":
     try:
