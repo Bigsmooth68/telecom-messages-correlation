@@ -6,6 +6,6 @@
     "CallingGT",
     "CalledGT",
     "MessageType",
-    "A-Number",
-    "B-Number"
+    "A_number",
+    "B_number"
 ]

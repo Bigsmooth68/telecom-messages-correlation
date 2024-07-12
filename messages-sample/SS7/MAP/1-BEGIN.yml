@@ -5,5 +5,5 @@
     "CIC": 333,
     "MessageType": "Begin",
     "Operation": "UpdateLocation",
-    "A-Number": 1234567890
+    "A_number": 1234567890
 }
