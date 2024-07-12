@@ -1,20 +1,14 @@
 # export PYTHONPATH=.
-import sys, os, logging
+import sys, os
 sys.path.insert(0, os.getcwd())
 
 from kafka import KafkaProducer
 import json, time, argparse
 from src.reader.reader import read_messages_files
+import src.custom_logger.custom_logger as custom_logger
 
 def current_milli_time():
     return round(time.time() * 1000)
-
-logger = logging.getLogger(__name__)
-handler = logging.StreamHandler(sys.stdout)
-fmt = '%(asctime)s - %(levelname)s - %(message)s'
-formatter = logging.Formatter(fmt)
-handler.setFormatter(formatter)
-logger.addHandler(handler)
 
 if __name__ == '__main__':
 
@@ -32,9 +26,9 @@ if __name__ == '__main__':
     fast = args.fast
 
     if debug:
-        logger.setLevel(logging.DEBUG)
+        logger = custom_logger.custom_logger(__name__, debug)
     else:
-        logger.setLevel(logging.INFO)
+        logger = custom_logger.custom_logger(__name__)
 
     # Get list of messages
     messages = read_messages_files(path)
