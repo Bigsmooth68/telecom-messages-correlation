@@ -17,26 +17,30 @@ async def submit_message(message: str, sleep_time: int):
     await asyncio.sleep(sleep_time)
     # Produce message
     producer.send(topic='simulator', value=json.dumps(message).encode('UTF-8'))
-    logger.info(f'Message {message["MessageType"]} sent ({sleep_time})')
+    logger.info(f'Message {message["MessageType"]} sent')
     logger.debug(message)
 
 async def main():
-    previous_time = 0
+    count = 0
     try:
         tasks = []
         while True:
+            count += 1
             if random_option:
                 # generate fake OPC, DPC, CIC
                 random_OPC = random.randrange(9999)
                 random_DPC = random.randrange(9999)
                 random_CIC = random.randrange(1000)
 
+            first_message_time = None
             for m in messages:
                 local_messsage = m.copy()
                 # Get message timestamp and update it with current time
-                m_time = local_messsage['timestamp']
-                local_messsage['timestamp'] = current_milli_time()
+                message_time = local_messsage['timestamp']
+                new_message_time = current_milli_time()
 
+                # Update message
+                local_messsage['timestamp'] = new_message_time
                 if random_option:
                     local_messsage['OPC'] = random_OPC
                     local_messsage['DPC'] = random_DPC
@@ -45,24 +49,31 @@ async def main():
                 else:
                     random_time = 0
 
-                # Determine how much time we should wait between messages
-                sleep_time = m_time - previous_time + random_time
-                sleep_time = max(0, sleep_time) # Prevent negativ value on loop
+                if first_message_time is None:
+                    sleep_time = 0
+                    first_message_time = message_time
+                else:
+                    # Determine how much time we should wait between messages
+                    sleep_time = message_time - first_message_time
+
+                # Apply modifiers
+                sleep_time += random_time
                 sleep_time = sleep_time/speed
 
-                previous_time = m_time # Move time forward based on current time
-
                 # Produce message
-                logger.info('Send task')
+                logger.info(f'Send task (sleep: {sleep_time})')
                 task = asyncio.create_task(submit_message(local_messsage, sleep_time))
                 tasks.append(task)
 
             if repeat:
                 logger.info('Repeating ...')
             else:
+                await asyncio.gather(*tasks)
                 logger.info('Completed')
                 break
-        await asyncio.gather(*tasks)
+            if count > 100:
+                await asyncio.gather(*tasks)
+                count = 0
     finally:
         print('Exiting ...')
 
