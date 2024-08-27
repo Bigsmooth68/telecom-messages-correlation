@@ -8,7 +8,12 @@ from src.reader.reader import read_messages_files
 import src.custom_logger.custom_logger as custom_logger
 import random
 
-def current_milli_time():
+def current_milli_time() -> int:
+    """ Get current unix time with milliseconds
+
+    Returns:
+        int: Current unix time with milliseconds
+    """
     return round(time.time() * 1000)
 
 if __name__ == '__main__':
