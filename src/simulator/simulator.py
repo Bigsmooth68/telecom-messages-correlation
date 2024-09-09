@@ -74,6 +74,7 @@ if __name__ == '__main__':
             local_messsage['timestamp'] = current_milli_time()
 
             if random_option:
+                # overwrite OPC/DPC/CIC with random ones
                 local_messsage['OPC'] = random_OPC
                 local_messsage['DPC'] = random_DPC
                 local_messsage['CIC'] = random_CIC
