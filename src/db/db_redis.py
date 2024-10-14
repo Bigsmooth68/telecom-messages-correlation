@@ -8,26 +8,32 @@ import redis
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 def find_xdr(key: str):
-    try:
-        result = r.get(key)
-        return result
-    except redis.exceptions.ConnectionError:
-        logger.debug('No connection to Redis')
-        exit(1)
+    """
+    Find xDR in redis DB.
+
+    :param str key: The key to look for
+    :return: Found result
+    """
+    result = r.get(key)
+    return result
 
 def set_xdr(key: str, xdr: str):
-    try:
-        r.set(key, xdr)
-    except redis.exceptions.ConnectionError:
-        logger.debug('No connection to Redis')
-        exit(1)
+    """
+    Set the xDR to the given key in the redis DB.
+
+    :param str key: The key to update/set
+    :param str xdr: The value to associate to the key
+
+    """
+    r.set(key, xdr)
 
 def remove_xdr(key: str):
-    try:
-        r.delete(key)
-    except redis.exceptions.ConnectionError:
-        logger.debug('No connection to Redis')
-        exit(1)
+    """
+    Remove the key and associated value from redis DB.
+
+    :param str key: The key to remove
+    """
+    r.delete(key)
 
 if __name__ == "__main__":
     find_xdr('toto')

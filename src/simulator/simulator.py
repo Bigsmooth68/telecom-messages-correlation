@@ -9,7 +9,12 @@ import src.custom_logger.custom_logger as custom_logger
 import random
 import asyncio
 
-def current_milli_time():
+def current_milli_time() -> int:
+    """ Get current unix time with milliseconds
+
+    Returns:
+        int: Current unix time with milliseconds
+    """
     return round(time.time() * 1000)
 
 async def submit_message(message: str, sleep_time: int):
@@ -120,6 +125,44 @@ if __name__ == '__main__':
     except:
         logger.error(f'Not able to connect')
         exit(1)
+    previous_time = 0    
+    while True:
+        # Play messages
 
-    asyncio.run(main())
-    
+        if random_option:
+            # generate fake OPC, DPC, CIC
+            random_OPC = random.randrange(9999)
+            random_DPC = random.randrange(9999)
+            random_CIC = random.randrange(1000)
+
+
+        for m in messages:
+            local_messsage = m.copy()
+            # Get message timestamp and update it with current time
+            m_time = local_messsage['timestamp']
+            local_messsage['timestamp'] = current_milli_time()
+
+            if random_option:
+                local_messsage['OPC'] = random_OPC
+                local_messsage['DPC'] = random_DPC
+                local_messsage['CIC'] = random_CIC
+                random_time = random.randrange(0,2)
+
+            # Determine how much time we should wait between messages
+            sleep_time = m_time - previous_time + random_time
+            sleep_time = 0 if sleep_time < 0 else sleep_time # Prevent negativ value on loop
+            sleep_time = sleep_time/speed
+
+            logger.info(f'Sleeping {sleep_time}s')
+            time.sleep(sleep_time)
+            previous_time = m_time # Move time forward based on current time
+
+            # Produce message
+            producer.send(topic='simulator', value=json.dumps(local_messsage).encode('UTF-8'))
+            logger.info(f'Message {m["MessageType"]} sent')
+            logger.debug(local_messsage)
+        if repeat:
+            logger.info('Repeating ...')
+        else:
+            logger.info('Completed')
+            break

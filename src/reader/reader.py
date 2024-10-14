@@ -3,7 +3,14 @@ import os
 import json
 
 def read_messages_files(path: str):
+    """Read messages files from path
 
+    Args:
+        path (str): path to folder
+
+    Returns:
+        arr: array of messages
+    """
     messages = []
     
     for f in sorted(os.listdir(path=path)):
@@ -18,6 +25,13 @@ def read_messages_files(path: str):
     return messages
 
 def read_messages_topic(topic_name: str):
+    """Read messages from topic
+    Args:
+        topic_name (str): Topic name from which to read messages
+
+    Returns:
+        _type_: array of messages
+    """
     return 0
 
 if __name__ == '__main__':
